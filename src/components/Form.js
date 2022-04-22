@@ -8,13 +8,13 @@ const Form = () => {
     register,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors },
   } = useForm();
 
   const validation = (data) => {
     console.log(data);
-    /* e.preventDefault(); */
-    console.log("formularen er sendt...");
+    console.log(watch("fornavn"));
   };
 
   let [renders, setRenders] = useState(0);
@@ -26,18 +26,16 @@ const Form = () => {
         onSubmit={handleSubmit(validation)}
         className=" flex flex-col gap-2"
       >
-        {errors.fornavn && <span>This field is required</span>}
+        {errors.fornavn?.type === "required" && (
+          <span>This field is required</span>
+        )}
+        {errors.fornavn?.type === "minLength" && (
+          <span>This field is required</span>
+        )}
         <input
-          {...register("fornavn", { required: true })}
-          onChange={(e) => {
-            setfornavn(e.target.value);
-            console.log(fornavn);
-            setRenders(++renders);
-            console.log(renders);
-          }}
+          {...register("fornavn", { required: true, minLength: 2 })}
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="text"
-          name="Fornavn"
           placeholder="Fornavn "
         />
         <input
