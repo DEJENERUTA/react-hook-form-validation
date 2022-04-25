@@ -1,9 +1,22 @@
 //react hook form
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { render } from "@testing-library/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const Form = () => {
+  const schema = yup.object().shape({
+    fornavn: yup.string().required(),
+    Efternavn: yup.string().required(),
+    email: yup.string().email().required(),
+    confirmEmail: yup
+      .string()
+      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
+      .required(),
+  });
+
+  const email = useRef({});
   const {
     register,
     handleSubmit,
@@ -44,6 +57,14 @@ const Form = () => {
           name="Efternavn"
           placeholder="Efternavn"
         />
+        {/* check if the confirm email is the same as email */}
+
+        {getValues
+          ? getValues("email") !== getValues("bekræftemail") && (
+              <span>The two emails must match</span>
+            )
+          : null}
+
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="email"
