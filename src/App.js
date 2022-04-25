@@ -7,7 +7,7 @@ function App() {
       <h1 className="text-white p-4 mb-2 font-bold text-lg bg-green-500 w-full">
         Din Profile
       </h1>
-      <div className="bg-green-400 broder-2 p-3 mb-4 w-2 h-2 top-0"></div>
+      <div className="bg-green-400 broder-2 p-3 mb-4 w-5 h-2 m-auto -top-10"></div>
       <Form />
     </div>
   );

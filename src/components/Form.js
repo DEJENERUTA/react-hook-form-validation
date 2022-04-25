@@ -9,11 +9,14 @@ const Form = () => {
   const schema = yup.object().shape({
     fornavn: yup.string().required(),
     Efternavn: yup.string().required(),
-    email: yup.string().email().required(),
+    email: yup
+      .string()
+      .email()
+      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/, "Email is not valid")
+      .required(),
     confirmEmail: yup
       .string()
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
-      .email()
+      .oneOf([yup.ref("email")], "Email does not match")
       .required(),
   });
 
@@ -27,7 +30,7 @@ const Form = () => {
     getValues,
     formState: { errors },
   } = useForm();
-
+  resolver: yupResolver(schema);
   const validation = (data) => {
     console.log(data);
     console.log(watch("fornavn"));
