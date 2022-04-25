@@ -13,10 +13,13 @@ const Form = () => {
     confirmEmail: yup
       .string()
       .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
+      .email()
       .required(),
   });
 
-  const email = useRef({});
+  const emailRegEx =
+    /^([^.][a-z,0-9,!#$%&'*+\-/=?^_`{|}~.]{1,64})([^.,\s]@)([a-z\-]{1,255})(\.[a-z0-9]{2,})$/gi;
+
   const {
     register,
     handleSubmit,
@@ -51,6 +54,9 @@ const Form = () => {
           type="text"
           placeholder="Fornavn "
         />
+        {errors.eftenavn?.type === "minLength" && (
+          <span>This field is required</span>
+        )}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="text"
@@ -58,24 +64,30 @@ const Form = () => {
           placeholder="Efternavn"
         />
         {/* check if the confirm email is the same as email */}
-
-        {getValues
-          ? getValues("email") !== getValues("bekræftemail") && (
-              <span>The two emails must match</span>
-            )
-          : null}
-
+        {errors.email?.type === "minLength" && (
+          <span>This field is required</span>
+        )}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="email"
           name="email"
           placeholder="Email"
+          {...register("email", {
+            required: true,
+            pattern: emailRegEx,
+          })}
         />
+        {errors.validate?.type === "validate" && (
+          <span>This email is not match!</span>
+        )}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="email"
           name=" bekræftemail"
           placeholder="Bekræft email"
+          {...register("validate", {
+            validate: (value) => value === watch("email"),
+          })}
         />
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
