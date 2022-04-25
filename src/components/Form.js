@@ -40,7 +40,7 @@ const Form = () => {
   const [fornavn, setfornavn] = useState("");
 
   return (
-    <div className="form">
+    <div className="form mt-2">
       <form
         onSubmit={handleSubmit(validation)}
         className=" flex flex-col gap-2"
@@ -125,7 +125,7 @@ const Form = () => {
           </label>
         </div>
 
-        <button className="bg-green-300 p-2 m-2 rounded-sm text-white">
+        <button className=" bg-green-300 p-2 m-2 rounded-sm text-white">
           Videre
         </button>
       </form>
