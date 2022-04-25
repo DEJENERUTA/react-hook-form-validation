@@ -2,11 +2,11 @@
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { render } from "@testing-library/react";
-import { yupResolver } from "@hookform/resolvers/yup";
+/* import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+ */
 const Form = () => {
-  const schema = yup.object().shape({
+  /* const schema = yup.object().shape({
     fornavn: yup.string().required(),
     Efternavn: yup.string().required(),
     email: yup.string().email().required(),
@@ -15,7 +15,7 @@ const Form = () => {
       .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
       .email()
       .required(),
-  });
+  }); */
 
   const emailRegEx =
     /^([^.][a-z,0-9,!#$%&'*+\-/=?^_`{|}~.]{1,64})([^.,\s]@)([a-z\-]{1,255})(\.[a-z0-9]{2,})$/gi;
