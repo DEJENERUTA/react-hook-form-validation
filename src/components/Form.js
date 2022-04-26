@@ -1,102 +1,93 @@
 //react hook form
-import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { render } from "@testing-library/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 const Form = () => {
-  const schema = yup.object().shape({
-    fornavn: yup.string().required(),
-    Efternavn: yup.string().required(),
-    email: yup
-      .string()
-      .email()
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/, "Email is not valid")
-      .required(),
-    confirmEmail: yup
-      .string()
-      .oneOf([yup.ref("email")], "Email does not match")
-      .required(),
-  });
-
   const emailRegEx =
     /^([^.][a-z,0-9,!#$%&'*+\-/=?^_`{|}~.]{1,64})([^.,\s]@)([a-z\-]{1,255})(\.[a-z0-9]{2,})$/gi;
+  const schema = yup.object({
+    fornavn: yup
+      .string()
+      .required("Fornavn er påkrævet")
+      .matches(/^[aA-zZA-y -]+$/, "Fornavn må kun indeholde bogstaver")
+      .min(2, "Fornavn skal være mindst 2 bogstaver langt")
+      .max(20, "Fornavn må ikke være længere end 20 bogstaver"),
+    efternavn: yup
+      .string()
+      .required("Efternavn skal udfyldes")
+      .matches(/^[aA-zZA-y -]+$/, "Efternavn må kun indeholde bogstaver")
+      .min(2, "Efternavn skal være mindst 2 bogstaver langt")
+      .max(20, "Efternavn må ikke være længere end 20 bogstaver"),
+    email: yup
+      .string()
+      .email("Email er påkrævet")
+      .required("Email er påkrævet")
+      .matches(emailRegEx, "navn@domæne.dk"),
+    validate: yup
+      .string()
+      .required("bekræft din email")
+      .oneOf([yup.ref("email")], "Email skal være ens"),
+    kodeord: yup
+      .string()
+      .required("Kodeord er påkrævet")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Kodeord skal indeholde mindst 8 tegn, 1 stort og 1 lille bogstav, 1 tal og 1 specialtegn"
+      )
+      .min(8, "Kodeord skal være mindst 8 tegn langt")
+      .max(20, "Kodeord må ikke være længere end 20 tegn"),
+  });
 
   const {
     register,
     handleSubmit,
     watch,
-    getValues,
     formState: { errors },
-  } = useForm();
-  resolver: yupResolver(schema);
-  const validation = (data) => {
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onSubmit = (data) => {
     console.log(data);
     console.log(watch("fornavn"));
   };
 
-  let [renders, setRenders] = useState(0);
-  const [fornavn, setfornavn] = useState("");
-
   return (
     <div className="form mt-2">
-      <form
-        onSubmit={handleSubmit(validation)}
-        className=" flex flex-col gap-2"
-      >
-        {errors.fornavn?.type === "required" && (
-          <span>This field is required</span>
-        )}
-        {errors.fornavn?.type === "minLength" && (
-          <span>This field is required</span>
-        )}
+      <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-2">
+        {errors.fornavn?.message}
         <input
-          {...register("fornavn", { required: true, minLength: 2 })}
+          {...register("fornavn")}
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="text"
           placeholder="Fornavn "
         />
-        {errors.eftenavn?.type === "minLength" && (
-          <span>This field is required</span>
-        )}
+        {errors.efternavn?.message}
         <input
+          {...register("efternavn")}
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="text"
-          name="Efternavn"
           placeholder="Efternavn"
         />
-        {/* check if the confirm email is the same as email */}
-        {errors.email?.type === "minLength" && (
-          <span>This field is required</span>
-        )}
+        {errors.email?.message}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="email"
-          name="email"
           placeholder="Email"
-          {...register("email", {
-            required: true,
-            pattern: emailRegEx,
-          })}
+          {...register("email")}
         />
-        {errors.validate?.type === "validate" && (
-          <span>This email is not match!</span>
-        )}
+        {errors.validate?.message}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="email"
-          name=" bekræftemail"
           placeholder="Bekræft email"
-          {...register("validate", {
-            validate: (value) => value === watch("email"),
-          })}
+          {...register("validate")}
         />
+        {errors.kodeord?.message}
         <input
           className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
           type="kodeord"
-          name="kodeord"
           placeholder="Kodeord"
+          {...register("kodeord")}
         />
         <div className="flex items-center gap-1">
           <input
