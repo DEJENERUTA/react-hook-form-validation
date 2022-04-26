@@ -9,11 +9,14 @@ const Form = () => {
   /* const schema = yup.object().shape({
     fornavn: yup.string().required(),
     Efternavn: yup.string().required(),
-    email: yup.string().email().required(),
+    email: yup
+      .string()
+      .email()
+      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/, "Email is not valid")
+      .required(),
     confirmEmail: yup
       .string()
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
-      .email()
+      .oneOf([yup.ref("email")], "Email does not match")
       .required(),
   }); */
 
@@ -27,7 +30,7 @@ const Form = () => {
     getValues,
     formState: { errors },
   } = useForm();
-
+  resolver: yupResolver(schema);
   const validation = (data) => {
     console.log(data);
     console.log(watch("fornavn"));
@@ -37,7 +40,7 @@ const Form = () => {
   const [fornavn, setfornavn] = useState("");
 
   return (
-    <div className="form">
+    <div className="form mt-2">
       <form
         onSubmit={handleSubmit(validation)}
         className=" flex flex-col gap-2"
@@ -122,7 +125,7 @@ const Form = () => {
           </label>
         </div>
 
-        <button className="bg-green-300 p-2 m-2 rounded-sm text-white">
+        <button className=" bg-green-300 p-2 m-2 rounded-sm text-white">
           Videre
         </button>
       </form>
