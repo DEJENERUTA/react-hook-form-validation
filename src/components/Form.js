@@ -96,7 +96,7 @@ const Form = () => {
           {errors.kodeord?.message}
           <input
             className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-            type="kodeord"
+            type="password"
             placeholder="Kodeord"
             {...register("kodeord")}
           />

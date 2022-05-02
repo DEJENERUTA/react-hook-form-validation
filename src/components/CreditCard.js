@@ -1,94 +1,98 @@
 import React, { useState, useContext } from "react";
 import formContext from "../context/Context";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+
+const schema = yup.object({
+  cardNumber: yup
+    .string()
+    .required("Kortnummer er påkrævet")
+    .min(16, "Kortnummer skal være mindst 16 tegn langt")
+    .max(16, "Kortnummer må ikke være længere end 16 tegn"),
+  cardHolderName: yup
+    .string()
+    .required("Kortejerens navn skal udfyldes")
+    .matches(/^[aA-zZA-y -]+$/, "Kortejerens navn må kun indeholde bogstaver")
+    .min(2, "Kortejerens navn skal være mindst 2 bogstaver langt")
+    .max(20, "Kortejerens navn må ikke være længere end 20 bogstaver"),
+  cardExpirationDate: yup
+    .string()
+    .required("Kortets udløbsdato skal udfyldes")
+    .matches(
+      /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/,
+      "Kortets udløbsdato skal være gyldigt"
+    ),
+  cardCVC: yup
+    .string()
+    .required("Kortets CVC skal udfyldes")
+    .min(3, "Kortets CVC skal være mindst 3 tal langt")
+    .max(3, "Kortets CVC skal ikke være længere end 3 tal langt"),
+});
 
 const CreditCard = () => {
   const { cardInfo, setCardInfo } = useContext(formContext);
-  console.log(cardInfo);
 
-  /* const [card, setCard] = useState({
-    cardNumber: "",
-    cardHolder: "",
-    cardExpiry: "",
-    cardCvc: "",
-  }); */
-
-  /* const handleChange = (e) => {
-    setCard({ ...card, [e.target.name]: e.target.value });
-  }; */
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    /* console.log(card); */
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
-  /*  <div className="form mt-2">
-      <form onSubmit={handleSubmit} className=" flex flex-col gap-2">
-import React, { useState } from "react";
-const CreditCard = () => {
-  const [card, setCard] = useState({
-    cardNumber: "",
-    cardName: "",
-    cardDate: "",
-    cardCVC: "",
-  });
-
-  const handleChange = (e) => {
-    setCard({
-      ...card,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(card);
-  };
- */
   return (
     <div className="creadit-card mt-2 w-1/2 ">
-      <h2>CreditCard</h2>
-      <p>you full fill the following informations</p>
-      <ul>
-        <li>navn: {cardInfo.fornavn}</li>
+      <h2>Credit Card</h2>
+      <p>You full fill the following informations</p>
+      <ul className="mb-2">
+        <li>Navn: {cardInfo.fornavn}</li>
         <li>Efternavn: {cardInfo.efternavn}</li>
         <li>Email: {cardInfo.email}</li>
       </ul>
-      <form className=" flex" onSubmit={handleSubmit}>
-        <div className="">
-          <input
-            className="border-none outline-none p-2 mb-2 bg-gray-200 rounded-md"
-            type="text"
-            name="cardNumber"
-            placeholder="Card Number"
-          />
-          <input
-            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-            type="text"
-            name="cardName"
-            placeholder="Card Name"
-          />
+      <form className="" onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-group flex">
+          <div className="mr-4">
+            {errors.cardNumber?.message}
+            <input
+              {...register("cardNumber")}
+              className="appearance-none border-none outline-none p-2 mb-2 bg-gray-200 rounded-md"
+              type="number"
+              placeholder="Card Number"
+            />
+            {errors.cardHolderName?.message}
+            <input
+              {...register("cardHolderName")}
+              className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+              type="text"
+              placeholder="Card Holder Name"
+            />
+          </div>
+          <div>
+            {errors.cardExpirationDate?.message}
+            <input
+              {...register("cardExpirationDate")}
+              className="border-none outline-none p-2 mb-2 gap-2 bg-gray-200 rounded-md"
+              type="text"
+              placeholder="Card Expired Date"
+            />
+            {errors.cardCVC?.message}
+            <input
+              {...register("cardCVC")}
+              className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+              type="number"
+              placeholder="CVC"
+            />
+          </div>
         </div>
-        <div>
-          <input
-            className="border-none outline-none p-2 mb-2 gap-2 bg-gray-200 rounded-md"
-            type="text"
-            name="cardDate"
-            placeholder="Card Date"
-          />
-          <input
-            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-            type="text"
-            name="cardCVC"
-            placeholder="Card CVC"
-          />
-        </div>
+        <button
+          className=" bg-green-300 p-2 m-2 rounded-sm text-white w-full"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
-      <button
-        className=" bg-green-300 p-2 m-2 rounded-sm text-white w-full"
-        type="submit"
-      >
-        Submit
-      </button>
     </div>
   );
 };
