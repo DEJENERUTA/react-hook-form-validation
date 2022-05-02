@@ -1,12 +1,21 @@
+import React, { Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Form from "./components/Form";
+import CreditCard from "./components/CreditCard";
+import formContext from "./context/Context";
+
 import "./App.css";
 
 function App() {
+  const [cardInfo, setCardInfo] = useState({});
   return (
     <div className="App  w-1/2 h-1/2 m-auto text-center">
-      <h1 className="text-white p-4  font-bold text-lg  w-full">Din Profile</h1>
-      <div className="btn   mx-auto w-0 h-0"></div>
-      <Form />
+      <formContext.Provider value={{ cardInfo, setCardInfo }}>
+        <Routes>
+          <Route path="/" element={<Form />} />
+          <Route path="/creditcard" element={<CreditCard />} />
+        </Routes>
+      </formContext.Provider>
     </div>
   );
 }

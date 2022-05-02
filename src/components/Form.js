@@ -2,8 +2,13 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import formContext from "../context/Context";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom/";
 
 const Form = () => {
+  const { cardInfo, setCardInfo } = useContext(formContext);
+  const history = useNavigate();
   const emailRegEx =
     /^([^.][a-z,0-9,!#$%&'*+\-/=?^_`{|}~.]{1,64})([^.,\s]@)([a-z\-]{1,255})(\.[a-z0-9]{2,})$/gi;
   const schema = yup.object({
@@ -45,82 +50,89 @@ const Form = () => {
     watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-
   const onSubmit = (data) => {
-    console.log(data);
-    console.log(watch("fornavn"));
+    setCardInfo(data);
+    history("/creditcard");
   };
 
   return (
-    <div className="form mt-2">
-      <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-2">
-        {errors.fornavn?.message}
-        <input
-          {...register("fornavn")}
-          className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Fornavn "
-        />
-        {errors.efternavn?.message}
-        <input
-          {...register("efternavn")}
-          className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Efternavn"
-        />
-        {errors.email?.message}
-        <input
-          className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-          type="email"
-          placeholder="Email"
-          {...register("email")}
-        />
-        {errors.validate?.message}
-        <input
-          className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-          type="email"
-          placeholder="Bekræft email"
-          {...register("validate")}
-        />
-        {errors.kodeord?.message}
-        <input
-          className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
-          type="kodeord"
-          placeholder="Kodeord"
-          {...register("kodeord")}
-        />
-        <div className="flex items-center gap-1">
+    <>
+      {" "}
+      <h1 className="text-white p-4  font-bold text-lg  w-full">Din Profile</h1>
+      <div className="btn mx-auto w-0 h-0"></div>
+      <div className="form mt-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className=" flex flex-col gap-2"
+        >
+          {errors.fornavn?.message}
           <input
-            className=""
-            type="checkbox"
-            name="checkbox"
-            id="checkbox"
-            placeholder="jeg accepterer Zeltlands medlemvilkår, herunder at Zetland må sende mig tilbud."
+            {...register("fornavn")}
+            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+            type="text"
+            placeholder="Fornavn "
           />
-          <label className="" htmlFor="checkbox">
-            jeg accepterer Zeltlands{" "}
-            <a className="text-red-500 underline">medlemvilkår</a>, herunder at
-            Zetland må sende mig tilbud.
-          </label>
-        </div>
-        <div className="flex items-center gap-1">
+          {errors.efternavn?.message}
           <input
-            className=""
-            type="checkbox"
-            name="checkbox"
-            id="checkbox2"
-            placeholder="Jeg accepterer at Zetland må sende mig tilbud."
+            {...register("efternavn")}
+            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+            type="text"
+            placeholder="Efternavn"
           />
-          <label className=" text-center" htmlFor="checkbox2">
-            Jeg accepterer at Zetland må sende mig tilbud
-          </label>
-        </div>
+          {errors.email?.message}
+          <input
+            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+            type="email"
+            placeholder="Email"
+            {...register("email")}
+          />
+          {errors.validate?.message}
+          <input
+            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+            type="email"
+            placeholder="Bekræft email"
+            {...register("validate")}
+          />
+          {errors.kodeord?.message}
+          <input
+            className="border-none outline-none p-2 gap-2 bg-gray-200 rounded-md"
+            type="kodeord"
+            placeholder="Kodeord"
+            {...register("kodeord")}
+          />
+          <div className="flex items-center gap-1">
+            <input
+              className=""
+              type="checkbox"
+              name="checkbox"
+              id="checkbox"
+              placeholder="jeg accepterer Zeltlands medlemvilkår, herunder at Zetland må sende mig tilbud."
+            />
+            <label className="" htmlFor="checkbox">
+              jeg accepterer Zeltlands{" "}
+              <a className="text-red-500 underline">medlemvilkår</a>, herunder
+              at Zetland må sende mig tilbud.
+            </label>
+          </div>
+          <div className="flex items-center gap-1">
+            <input
+              className=""
+              type="checkbox"
+              name="checkbox"
+              id="checkbox2"
+              placeholder="Jeg accepterer at Zetland må sende mig tilbud."
+            />
+            <label className=" text-center" htmlFor="checkbox2">
+              Jeg accepterer at Zetland må sende mig tilbud
+            </label>
+          </div>
 
-        <button className=" bg-green-300 p-2 m-2 rounded-sm text-white">
-          Videre
-        </button>
-      </form>
-    </div>
+          <button className=" bg-green-300 p-2 m-2 rounded-sm text-white">
+            Videre
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
