@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import formContext from "../context/Context";
+import { formContext } from "../context/Context";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom/";
 

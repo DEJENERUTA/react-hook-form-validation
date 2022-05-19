@@ -1,6 +1,13 @@
-import { createContext } from "react";
-// use conextapi to fill the context
+import { createContext, useState } from "react";
 
-const formContext = createContext("test");
+export const formContext = createContext("test");
+const ContextProvider = ({ children }) => {
+  const [cardInfo, setCardInfo] = useState({});
+  return (
+    <formContext.Provider value={{ cardInfo, setCardInfo }}>
+      {children}
+    </formContext.Provider>
+  );
+};
 
-export default formContext;
+export default ContextProvider;

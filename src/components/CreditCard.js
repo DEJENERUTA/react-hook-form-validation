@@ -1,15 +1,15 @@
+//update the value of the cardInfo in the formContext
+
 import React, { useState, useContext } from "react";
-import formContext from "../context/Context";
+import { formContext } from "../context/Context";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { getValue } from "@testing-library/user-event/dist/utils";
 
 const schema = yup.object({
-  cardNumber: yup
-    .string()
-    .required("Kortnummer er påkrævet")
-    .min(16, "Kortnummer skal være mindst 16 tegn langt")
-    .max(16, "Kortnummer må ikke være længere end 16 tegn"),
+  cardNumber: yup.number().required("Kortnummer er påkrævet"),
+
   cardHolderName: yup
     .string()
     .required("Kortejerens navn skal udfyldes")
@@ -23,11 +23,7 @@ const schema = yup.object({
       /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/,
       "Kortets udløbsdato skal være gyldigt"
     ),
-  cardCVC: yup
-    .string()
-    .required("Kortets CVC skal udfyldes")
-    .min(3, "Kortets CVC skal være mindst 3 tal langt")
-    .max(3, "Kortets CVC skal ikke være længere end 3 tal langt"),
+  cardCVC: yup.number().required("Kortets CVC skal udfyldes"),
 });
 
 const CreditCard = () => {
@@ -46,6 +42,7 @@ const CreditCard = () => {
     <div className="creadit-card mt-2 w-1/2 ">
       <h2>Credit Card</h2>
       <p>You full fill the following informations</p>
+
       <ul className="mb-2">
         <li>Navn: {cardInfo.fornavn}</li>
         <li>Efternavn: {cardInfo.efternavn}</li>
